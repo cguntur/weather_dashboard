@@ -6,7 +6,7 @@
     var country = document.getElementById("select_country").value;
     console.log("Country: " + country);
     
-    fetch('http://api.openweathermap.org/geo/1.0/direct?q='+city+','+country+'&appid=50935aee1783372b16bb0fdccd4bd624',{
+    fetch('api.openweathermap.org/geo/1.0/direct?q='+city+','+country+'&appid=50935aee1783372b16bb0fdccd4bd624',{
     }).then(function (response){
         return response.json();
     }).then(function(data){
