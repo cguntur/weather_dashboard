@@ -3,20 +3,54 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
+<html class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <!-- foundation-float.min.css: Compressed CSS with legacy Float Grid -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation-float.min.css" crossorigin="anonymous">
+
+        <!-- foundation-prototype.min.css: Compressed CSS with prototyping classes -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation-prototype.min.css" crossorigin="anonymous">
+
+        <!-- foundation-rtl.min.css: Compressed CSS with right-to-left reading direction -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation-rtl.min.css" crossorigin="anonymous">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+        <!-- Compressed JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+        
+
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        <header class="primary">
+            <h1 class="text-center">Weather Dashboard</h1>
+        </header>
+        <main class="grid-x">
+            <div class="cell medium-6 large-4 search_div">
+                <form>
+                    <input type="text" name="city_input" id="city_input" placeholder="City Name" />
+                    <select name="country" id="select_country">
+                        <option value="">Select Country</option>
+                    </select>
+                    <input type="submit" name="form_submit" id="form_submit" value="Search" />
+                </form>
+            </div><!--search_div-->
+            <div class="cell medium-6 large-8 results_div">
+                12/6/8 cells
+            </div><!--results_div-->
+
+        </main>
         
-        <script src="" async defer></script>
+        
+        <script src="js/scripts.js" async defer></script>
     </body>
 </html>
