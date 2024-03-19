@@ -1,12 +1,11 @@
 var today = new Date();
-console.log("Today: " + today.toLocaleDateString());
-//dateStr.toLocaleDateString()
 var five_days_data = [];
 var weatherHistory = JSON.parse(localStorage.getItem('weatherHistory')) || [];
-//var weatherHistory = [];
 var city = "";
 
 generate_countries_dropdown();
+display_past_searched_places();
+display_weather_for_past_places();
 
 document.getElementById("form_submit").addEventListener("click", function(event){
   event.preventDefault();
@@ -17,10 +16,26 @@ document.getElementById("form_submit").addEventListener("click", function(event)
   }).then(function (response){
       return response.json();
   }).then(function(data){
+    console.log(data);
       var lat = data[0].lat;
       var lon = data[0].lon;
+      console.log("City: " + city);
       get_current_weather_forecast(lat, lon);
       get_five_day_weather_forecast(lat, lon);
+      create_past_search_list(city, country, lat,lon);
+      
+      var obj = weatherHistory.find(function(entry) { 
+        console.log(entry);
+        return entry.city === city; 
+      });
+      if (obj) {
+        console.log("City already exists.");
+        //obj.value = task;
+      } else {
+        weatherHistory.push({city: city, country: country, lat: lat, lon: lon});
+      }
+
+      localStorage.setItem("weatherHistory", JSON.stringify(weatherHistory));
   });
 })
 
@@ -42,8 +57,6 @@ function get_five_day_weather_forecast(lat, lon){
       return response.json();
   })
   .then(function (data) {
-      console.log(data);
-      //display_five_days_weather(data);
       display_five_days_weather(data);
   });
 }
@@ -80,8 +93,6 @@ function get_five_days_weather_details(data){
           }
       })
   });
-  console.log("New Data");
-  console.log(five_days_data);
   return five_days_data;
 }
 
@@ -89,20 +100,14 @@ function display_five_days_weather(data){
   var five_day_data = get_five_days_weather_details(data);
   Object.entries(five_day_data).forEach(([key, value]) => {
       var date = key;
-      console.log("Date: " + key);
       var max_temp = value.main.temp_max;
       var min_temp = value.main.temp_min;
       var humidity = value.main.humidity;
       var wind_speed = value.wind.speed;
 
       create_weather_card(date, max_temp, min_temp, humidity, wind_speed);
-
-      console.log("Max Temp: " + max_temp);
   });
   
-}
-
-function saveWeatherData(data, five_day_data){
 }
 
 function create_weather_card(date, max_temp, min_temp, humidity, wind_speed){
@@ -139,20 +144,7 @@ function create_weather_card(date, max_temp, min_temp, humidity, wind_speed){
   cardSection.append(windEl);
   cardSection.append(humidityEl);
 
-
-  
   cardsEl.append(cardDiv);
-
-  //<div class="card" style="width: 300px;">
-  //<div class="card-divider">
-  //    This is a header
-  //</div>
-  //<img src="assets/img/generic/rectangle-1.jpg">
-  //<div class="card-section">
-  //    <h4>This is a card.</h4>
-  //    <p>It has an easy to override visual style, and is appropriately subdued.</p>
-  //</div>
-  //</div>
 }
 
 function generate_countries_dropdown(){
@@ -166,8 +158,6 @@ function generate_countries_dropdown(){
       return response.json();
   })
   .then(function (data) {
-      console.log(data[0].cca2);
-      console.log(data[0].name.official);
       Object.entries(data).forEach(([key, value]) => {
           var option = document.createElement("option");
           option.text = value.name.official;
@@ -178,14 +168,35 @@ function generate_countries_dropdown(){
   });
 }
 
-
-function removeusingSet(arr) {
-  let unique = [];
-  arr.forEach(element => {
-      if (!unique.includes(element)) {
-          unique.push(element);
-      }
-  });
-  return unique;
+function display_past_searched_places(){
+    Object.entries(weatherHistory).forEach(([key, cityData]) => {
+        var city = cityData.city;
+        var country = cityData.country;
+        var lat = cityData.lat;
+        var lon = cityData.lon;
+        create_past_search_list(city, country, lat,lon);
+    });
 }
 
+function create_past_search_list(city, country, lat,lon){
+    var cityNamesEl = document.getElementById("city_names");
+    var cityEl = document.createElement("li");
+    cityEl.classList.add("past_city");
+    cityEl.setAttribute("data-country", country);
+    cityEl.setAttribute("data-lat", lat);
+    cityEl.setAttribute("data-lon", lon);
+    cityEl.textContent = city;
+    cityNamesEl.append(cityEl);
+}
+
+function display_weather_for_past_places(){
+    var cityElements = document.querySelectorAll(".past_city");
+    for (let i = 0; i < cityElements.length; i++) {
+        cityElements[i].addEventListener("click", function() {
+            var lat = cityElements[i].dataset.lat;
+            var lon = cityElements[i].dataset.lon;
+            get_current_weather_forecast(lat, lon);
+            get_five_day_weather_forecast(lat, lon);  
+        });
+    }
+}
