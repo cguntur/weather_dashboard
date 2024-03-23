@@ -1,3 +1,35 @@
 .search_div, .results_div{
     padding:20px;
 }
+
+#five_day_weather{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (min-width: 992px){
+    .card{
+        max-width: 200px;
+    }    
+}
+.card{
+    margin: 10px;
+}
+
+.current_icon{
+    padding-left:10px;
+}
+
+li.past_city {
+    background: #ccc;
+    list-style-type: none;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 5px;
+    text-align: center;
+}
+
+div#city_details {
+    border: #666 solid 1px;
+    padding: 15px;
+}
