@@ -11,7 +11,7 @@
 - The five day weather cards are generated dynamically
 - The searched cities are stored in the local storage and displayed as a list before the search form. Clicking on one of these cities will display the current and five day weather for those cities.
 
-## [View the website here](https://cguntur.github.io/code_quiz/)
+## [View the website here](https://cguntur.github.io/weather_dashboard/)
 
-<img src="./images/code_quiz.png" alt="Javascript Quiz Screenshot" width="400"/>
+<img src="./images/weather_dashboard.png" alt="Weather Dashboard Screenshot" width="400"/>
 

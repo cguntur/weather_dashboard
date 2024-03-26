@@ -2,8 +2,6 @@ var today = new Date();
 var five_days_data = [];
 var weatherHistory = JSON.parse(localStorage.getItem('weatherHistory')) || [];
 var city = "";
-var icon = "";
-var weatherCond = "";
 
 var cardsEl = document.getElementById("five_day_weather");
 
@@ -49,6 +47,7 @@ function get_current_weather_forecast(lat, lon){
 }
 
 function get_five_day_weather_forecast(lat, lon){
+    console.log("Five day weather");
   fetch('https://api.openweathermap.org/data/2.5/forecast?lat='+lat+'&lon='+lon+'&units=imperial&cnt=40&appid=50935aee1783372b16bb0fdccd4bd624',{
   })
   .then(function(response){
@@ -66,12 +65,7 @@ function display_current_weather_data(data){
           var current_temp = data.main.temp;
           var current_humidity = data.main.humidity;
           var current_wind = data.wind.speed;
-          weatherCond = data.weather[0].main;
-
-          icon = get_weather_icon(weatherCond);
-
           document.getElementById("city_name").textContent = city_name;
-          document.querySelector(".current_icon").innerHTML = icon;
           document.querySelector(".temp").textContent = current_temp;
           document.querySelector(".humidity").textContent = current_humidity + "%";
           document.querySelector(".wind").textContent = current_wind + " mph";
@@ -80,15 +74,19 @@ function display_current_weather_data(data){
 }
 
 function get_five_days_weather_details(data){
+    console.log("get_five_days_weather_details");
   Object.entries(data).forEach(([key, value]) => {
       var list = data.list;
+    //  console.log(list);
       Object.entries(list).forEach(([key, value]) => {
           var date = value.dt_txt;
           date = date.toString("YYYY-MM-DD");
           date = new Date(date).toLocaleDateString();
+          //console.log(date);
 
           for (i=0; i < list.length; i++) {
               if ((!list[i].hasOwnProperty(date))) {
+                //console.log("inside if condition");
                   five_days_data[date] = value;
               } 
           }
@@ -100,19 +98,24 @@ function get_five_days_weather_details(data){
 function display_five_days_weather(data){
   var five_day_data = get_five_days_weather_details(data);
   cardsEl.replaceChildren();
+  //console.log(five_day_data);
   Object.entries(five_day_data).forEach(([key, value]) => {
+    //console.log(key);
+    //console.log(value);
       var date = key;
       var max_temp = value.main.temp_max;
       var min_temp = value.main.temp_min;
       var humidity = value.main.humidity;
       var wind_speed = value.wind.speed;
-      weatherCond = value.weather[0].main;
+      var weatherCond = value.weather[0].main;
+      console.log("Weather Conditions: " + weatherCond);
       create_weather_card(date, max_temp, min_temp, humidity, wind_speed, weatherCond);
   });
   
 }
 
 function create_weather_card(date, max_temp, min_temp, humidity, wind_speed, weatherCond){
+    var icon = "";
     var cardDiv = document.createElement("div");
     cardDiv.classList.add("card");
 
@@ -127,7 +130,26 @@ function create_weather_card(date, max_temp, min_temp, humidity, wind_speed, wea
     var tempIcon = document.createElement("p");
     tempIcon.classList.add("icon");
 
-    icon = get_weather_icon(weatherCond);
+    switch (weatherCond){
+      case "Clouds":
+        icon = '<i class="fa-solid fa-cloud"></i>';
+        break;
+
+      case "Rain":
+        icon = '<i class="fa-solid fa-cloud-showers-heavy"></i>';
+        break;
+
+      case "Clear": 
+        icon = '<i class="fa-regular fa-sun"></i>';
+        break;
+
+      case "Snow": 
+        icon = '<i class="fa-solid fa-snowflake"></i>';
+        break;
+
+   default: 
+      icon = '<i class="fa-regular fa-sun"></i>';
+}
 
     tempIcon.innerHTML = icon;
 
@@ -149,30 +171,6 @@ function create_weather_card(date, max_temp, min_temp, humidity, wind_speed, wea
     cardSection.append(humidityEl);
 
     cardsEl.append(cardDiv);
-}
-
-function get_weather_icon(weatherCond){
-  switch (weatherCond){
-    case "Clouds":
-      icon = '<i class="fa-solid fa-cloud"></i>';
-      break;
-
-    case "Rain":
-      icon = '<i class="fa-solid fa-cloud-showers-heavy"></i>';
-      break;
-
-    case "Clear": 
-      icon = '<i class="fa-regular fa-sun"></i>';
-      break;
-
-    case "Snow": 
-      icon = '<i class="fa-solid fa-snowflake"></i>';
-      break;
-
-    default: 
-      icon = '<i class="fa-regular fa-sun"></i>';
-  }
-  return icon;
 }
 
 function generate_countries_dropdown(){
