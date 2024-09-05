@@ -181,6 +181,7 @@ function generate_countries_dropdown(){
       RequestCache: 'redirect'
   })
   .then(function (response) {
+    console.log(response);
       return response.json();
   })
   .then(function (data) {
